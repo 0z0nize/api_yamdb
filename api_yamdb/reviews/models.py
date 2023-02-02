@@ -1,25 +1,28 @@
+from core.models import NameSlugModel, ReviewAndComment
+from core.validators import SCORE_VALIDATOR, validate_release_year
+from django.conf import settings
 from django.db import models
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.SlugField(max_length=50, unique=True)
+class Category(NameSlugModel):
 
-    def __str__(self):
-        return self.name
+    class Meta(NameSlugModel.Meta):
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
 
-class Genre(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.SlugField(max_length=50, unique=True)
+class Genre(NameSlugModel):
 
-    def __str__(self):
-        return self.name[:15]
+    class Meta(NameSlugModel.Meta):
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
 
 
 class Title(models.Model):
-    name = models.CharField(max_length=256)
-    year = models.PositiveIntegerField()
+    name = models.CharField(max_length=settings.CHAR_IN_NAME)
+    year = models.IntegerField(
+        validators=[validate_release_year]
+    )
     description = models.TextField(
         blank=True,
         null=True,
@@ -31,22 +34,51 @@ class Title(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
+        blank=True,
         null=True,
         related_name='titles'
     )
 
     def __str__(self):
-        return self.name[:15]
+        return self.name
 
-# модели, view и эндпойнты для
 
-# произведений,
-# категорий,
-# жанров;
+class Review(ReviewAndComment):
+    title = models.ForeignKey(
+        Title, on_delete=models.CASCADE,
+        verbose_name='Произведение'
+    )
+    score = models.PositiveSmallIntegerField(
+        validators=(SCORE_VALIDATOR),
+        error_messages={'validators': 'Оценки могут быть от 1 до 10'},
+        default=1
+    )
 
-# Связанные данные и каскадное удаление
-# При удалении объекта пользователя User должны удаляться все отзывы и комментарии этого пользователя (вместе с оценками-рейтингами).
-# При удалении объекта произведения Title должны удаляться все отзывы к этому произведению и комментарии к ним.
-# При удалении объекта отзыва Review должны быть удалены все комментарии к этому отзыву.
-# При удалении объекта категории Category не нужно **удалять связанные с этой категорией произведения.
-# При удалении объекта жанра Genre не нужно удалять связанные с этим жанром произведения.
+    class Meta(ReviewAndComment.Meta):
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'author'],
+                name='unique_author_review'
+            )
+        ]
+        default_related_name = 'review'
+        verbose_name = 'Ревью'
+        verbose_name_plural = 'Ревью'
+
+    def __str__(self):
+        return self.text[:settings.CHAR_IN_REVIEW]
+
+
+class Comment(ReviewAndComment):
+    review = models.ForeignKey(
+        Review, on_delete=models.CASCADE,
+        verbose_name='Отзыв'
+    )
+
+    class Meta(ReviewAndComment.Meta):
+        default_related_name = 'comment'
+        verbose_name = 'Коментарий'
+        verbose_name_plural = 'Коментарии'
+
+    def __str__(self):
+        return self.text[:settings.CHAR_IN_COMMENT]
