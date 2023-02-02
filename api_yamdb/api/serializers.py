@@ -60,7 +60,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         request = self.context['request']
-        if (request.method not in ('GET', "PATCH")
+        if (request.method not in ('GET', 'PATCH')
            and Review.objects.filter(
             title=get_object_or_404(
                 Title, pk=self.context.get('view').kwargs.get('title_id')
