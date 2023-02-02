@@ -9,11 +9,11 @@
 Добавлять отзывы, комментарии и ставить оценки могут только аутентифицированные пользователи.
 
 ### Технологии
-- Python 3.9
-- Django 3.2
-- Django Rest Framework 3.12.4
-- Simple JWT
-- Django filter 22.1
+![N|Solid](https://img.shields.io/badge/Python-3.9.10-green?logo=python)
+![N|Solid](https://static.sitestack.cn/projects/django-rest-framework/uploads/201912/15e1c66cffd1a091.png/cover)
+![N|Solid](https://i.ytimg.com/vi/PUzgZrS_piQ/default.jpg)
+
+Django filter 22.1
 
 ### Как запустить проект:
 
@@ -77,10 +77,10 @@ POST /api/v1/auth/token/
 
 
 
-##### Команда разработки:
-##### _Владислав Шкаровский_
+#### Команда разработки:
+##### [_Владислав Шкаровский_](https://github.com/0z0nize)
 (категории, жанры и произведения: модели, view и эндпойнты для них)
-##### _Кирилл Мирончук_ 
+##### [_Кирилл Мирончук_](https://github.com/kirillicetea)
 (управление пользователями: система регистрации и аутентификации, права доступа, работа с токеном, система подтверждения e-mail)
-##### _Тарасова Ольга_
+##### [_Ольга Тарасова_](https://github.com/olga159)
 (отзывы и комментарии: модели и view, эндпойнты, права доступа для запросов. Рейтинги произведений)
