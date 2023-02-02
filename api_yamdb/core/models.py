@@ -30,4 +30,4 @@ class ReviewAndComment(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ('-pub_date',)
+        ordering = ['-pub_date']

@@ -22,7 +22,7 @@ class UsernameValidatorMixin:
     )
 
     def validate_username(self, value):
-        if value.lower() == "me":
+        if value.lower() == 'me':
             raise serializers.ValidationError(
                 "Имя пользователя 'me'- не доступно"
             )

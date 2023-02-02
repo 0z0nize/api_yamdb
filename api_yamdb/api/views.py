@@ -24,7 +24,7 @@ from api.serializers import (CategorySerializer, CommentSerializer,
                              UserEditSerializer, UserSerializer)
 
 
-@api_view(["POST"])
+@api_view(['POST'])
 def register(request):
     serializer = RegisterDataSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -33,11 +33,11 @@ def register(request):
             **serializer.validated_data
         )
     except IntegrityError:
-        raise ValidationError("Неверное имя пользователя или email")
+        raise ValidationError('Неверное имя пользователя или email')
     confirmation_code = default_token_generator.make_token(user)
     send_mail(
-        subject="YaMDb регистрация",
-        message=f"Ваш код подтверждения: {confirmation_code}",
+        subject='YaMDb регистрация',
+        message=f'Ваш код подтверждения: {confirmation_code}',
         from_email=DEFAULT_FROM_EMAIL,
         recipient_list=[user.email],
     )
@@ -45,26 +45,26 @@ def register(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(["POST"])
+@api_view(['POST'])
 def get_jwt_token(request):
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = get_object_or_404(
         User,
-        username=serializer.validated_data.get("username")
+        username=serializer.validated_data.get('username')
     )
 
     if default_token_generator.check_token(
-        user, serializer.validated_data.get("confirmation_code")
+        user, serializer.validated_data.get('confirmation_code')
     ):
         token = AccessToken.for_user(user)
-        return Response({"token": str(token)}, status=status.HTTP_200_OK)
+        return Response({'token': str(token)}, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    lookup_field = "username"
+    lookup_field = 'username'
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAdmin,)
@@ -72,7 +72,7 @@ class UserViewSet(viewsets.ModelViewSet):
     search_fields = ('username',)
 
     @action(
-        methods=["get", "patch",],
+        methods=['GET', 'PATCH'],
         detail=False,
         permission_classes=[permissions.IsAuthenticated],
         serializer_class=UserEditSerializer,
@@ -84,7 +84,7 @@ class UserViewSet(viewsets.ModelViewSet):
             partial=True
         )
         serializer.is_valid(raise_exception=True)
-        if request.method == "PATCH":
+        if request.method == 'PATCH':
             serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
