@@ -6,7 +6,10 @@ from django.db import models
 from django.utils import timezone
 from rest_framework import serializers
 
-SCORE_VALIDATOR = (MinValueValidator(1), MaxValueValidator(10))
+SCORE_VALIDATOR = (
+    MinValueValidator(settings.SCORE_MIN),
+    MaxValueValidator(settings.SCORE_MAX)
+)
 
 
 class UsernameValidatorMixin:

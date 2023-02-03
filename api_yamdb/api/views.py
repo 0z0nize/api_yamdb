@@ -27,6 +27,11 @@ from api.serializers import (CategorySerializer, CommentSerializer,
 @api_view(['POST'])
 def register(request):
     serializer = RegisterDataSerializer(data=request.data)
+    if User.objects.filter(
+        username=request.data.get('username'),
+        email=request.data.get('email')
+    ).exists():
+        return Response(request.data, status=status.HTTP_200_OK)
     serializer.is_valid(raise_exception=True)
     try:
         user, create = User.objects.get_or_create(
@@ -124,12 +129,13 @@ class CategoryViewSet(GetPostDeleteViewSet):
 
 
 class GenreViewSet(GetPostDeleteViewSet):
-    queryset = Genre.objects.all()
+    queryset = Genre.objects.all().order_by('id')
     serializer_class = GenreSerializer
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(rating=Avg('review__score'))
+    queryset = Title.objects.annotate(rating=Avg('review__score')
+                                      ).order_by('id')
     serializer_class = TitleSerializerGet
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)

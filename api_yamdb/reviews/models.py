@@ -13,7 +13,7 @@ class Category(NameSlugModel):
 
 class Genre(NameSlugModel):
 
-    class Meta(NameSlugModel.Meta):
+    class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
 
