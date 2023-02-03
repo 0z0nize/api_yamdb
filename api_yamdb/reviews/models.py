@@ -71,7 +71,8 @@ class Review(ReviewAndComment):
 
 class Comment(ReviewAndComment):
     review = models.ForeignKey(
-        Review, on_delete=models.CASCADE,
+        Review,
+        on_delete=models.CASCADE,
         verbose_name='Отзыв'
     )
 
@@ -79,6 +80,7 @@ class Comment(ReviewAndComment):
         default_related_name = 'comment'
         verbose_name = 'Коментарий'
         verbose_name_plural = 'Коментарии'
+        ordering = ('-pub_date',)
 
     def __str__(self):
         return self.text[:settings.CHAR_IN_COMMENT]

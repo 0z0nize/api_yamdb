@@ -1,7 +1,7 @@
 from api_yamdb.settings import DEFAULT_FROM_EMAIL
 from core.filters import TitleFilter
 from core.permissions import (IsAdmin, IsAdminOrReadOnly,
-                              OwnerAdminModeratorOrReadOnly)
+                              UserAdminModeratorOrReadOnly)
 from core.viewsets import GetPostDeleteViewSet
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -14,7 +14,7 @@ from rest_framework.decorators import action, api_view
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from reviews.models import Category, Comment, Genre, Review, Title
+from reviews.models import Category, Genre, Review, Title
 from users.models import User
 
 from api.serializers import (CategorySerializer, CommentSerializer,
@@ -96,7 +96,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = (OwnerAdminModeratorOrReadOnly,)
+    permission_classes = (UserAdminModeratorOrReadOnly,)
 
     def get_title(self):
         return get_object_or_404(Title, id=self.kwargs.get('title_id'))
@@ -110,8 +110,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (OwnerAdminModeratorOrReadOnly,)
-    queryset = Comment.objects.all()
+    permission_classes = (UserAdminModeratorOrReadOnly,)
 
     def get_review(self):
         return get_object_or_404(Review, id=self.kwargs.get('review_id'))
