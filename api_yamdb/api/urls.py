@@ -1,43 +1,28 @@
+from core.routers import NoPutRouter
 from django.urls import include, path
-from rest_framework import routers
+
 from .views import (CategoryViewSet, CommentViewSet, GenreViewSet,
-                    ReviewViewSet, TitleViewSet)
+                    ReviewViewSet, TitleViewSet, UserViewSet, get_jwt_token,
+                    register)
 
+v1_router = NoPutRouter()
 
-v1_router = routers.DefaultRouter()
-v1_router.register('genres', GenreViewSet, basename='genres')
-v1_router.register('categories', CategoryViewSet, basename='categories')
-v1_router.register('titles', TitleViewSet, basename='titles')
+v1_router.register(r'users', UserViewSet)
 v1_router.register(
     r'titles/(?P<title_id>\d+)/reviews', ReviewViewSet, basename='reviews')
 v1_router.register(
     r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
     CommentViewSet, basename='comments')
+v1_router.register('categories', CategoryViewSet)
+v1_router.register('genres', GenreViewSet)
+v1_router.register('titles', TitleViewSet)
+
+auth_urlpatterns = [
+    path('signup/', register, name='register'),
+    path('token/', get_jwt_token, name='token')
+]
 
 urlpatterns = [
     path('v1/', include(v1_router.urls)),
+    path('v1/auth/', include(auth_urlpatterns)),
 ]
-
-# api/v1/categories/
-# api/v1/categories/{slug}/
-
-# api/v1/genres/
-# api/v1/genres/{slug}/
-
-# api/v1/titles/
-# api/v1/titles/{titles_id}/
-
-
-# api/v1/titles/{title_id}/reviews/
-# api/v1/titles/{title_id}/reviews/{review_id}/
-
-# api/v1/titles/{title_id}/reviews/{review_id}/comments/
-# api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/
-
-
-# api/v1/auth/signup/
-# api/v1/auth/token/
-
-# api/v1/users/
-# api/v1/users/{username}/
-# api/v1/users/me/

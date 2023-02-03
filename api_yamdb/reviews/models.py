@@ -1,30 +1,28 @@
-from django.contrib.auth import get_user_model
-from django.core.validators import MaxValueValidator, MinValueValidator
+from core.models import NameSlugModel, ReviewAndComment
+from core.validators import SCORE_VALIDATOR, validate_release_year
+from django.conf import settings
 from django.db import models
 
 
-User = get_user_model()
+class Category(NameSlugModel):
+
+    class Meta(NameSlugModel.Meta):
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.SlugField(max_length=50, unique=True)
+class Genre(NameSlugModel):
 
-    def __str__(self):
-        return self.name
-
-
-class Genre(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.SlugField(max_length=50, unique=True)
-
-    def __str__(self):
-        return self.name[:15]
+    class Meta:
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
 
 
 class Title(models.Model):
-    name = models.CharField(max_length=256)
-    year = models.PositiveIntegerField()
+    name = models.CharField(max_length=settings.CHAR_IN_NAME)
+    year = models.IntegerField(
+        validators=[validate_release_year]
+    )
     description = models.TextField(
         blank=True,
         null=True,
@@ -36,86 +34,53 @@ class Title(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
+        blank=True,
         null=True,
         related_name='titles'
     )
 
     def __str__(self):
-        return self.name[:15]
+        return self.name
 
 
-class Review(models.Model):
+class Review(ReviewAndComment):
     title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name='title_reviews'
+        Title, on_delete=models.CASCADE,
+        verbose_name='Произведение'
     )
-    text = models.TextField()
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='author_reviews'
-    )
-    score = models.IntegerField(
-        validators=[
-            MinValueValidator(1),
-            MaxValueValidator(10)
-        ]
-    )
-    pub_date = models.DateTimeField(
-        auto_now_add=True,
-        db_index=True
+    score = models.PositiveSmallIntegerField(
+        validators=(SCORE_VALIDATOR),
+        error_messages={'validators': 'Оценки могут быть от 1 до 10'},
+        default=1
     )
 
-    class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-        ordering = ('-pub_date',)
+    class Meta(ReviewAndComment.Meta):
         constraints = [
             models.UniqueConstraint(
                 fields=['title', 'author'],
-                name='unique_review'
+                name='unique_author_review'
             )
         ]
+        default_related_name = 'review'
+        verbose_name = 'Ревью'
+        verbose_name_plural = 'Ревью'
 
     def __str__(self):
-        return self.text[100]
+        return self.text[:settings.CHAR_IN_REVIEW]
 
 
-class Comment(models.Model):
+class Comment(ReviewAndComment):
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
-        related_name='review_comments'
-    )
-    text = models.TextField()
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='author_comments'
-    )
-    pub_date = models.DateTimeField(
-        auto_now_add=True,
-        db_index=True
+        verbose_name='Отзыв'
     )
 
-    class Meta:
-        verbose_name = 'Комментарий'
-        verbose_name_plural = 'Комментарии'
+    class Meta(ReviewAndComment.Meta):
+        default_related_name = 'comment'
+        verbose_name = 'Коментарий'
+        verbose_name_plural = 'Коментарии'
         ordering = ('-pub_date',)
 
     def __str__(self):
-        return self.text[100]
-
-# модели, view и эндпойнты для
-
-# произведений,
-# категорий,
-# жанров;
-
-# Связанные данные и каскадное удаление
-# При удалении объекта пользователя User должны удаляться все отзывы и комментарии этого пользователя (вместе с оценками-рейтингами).
-# При удалении объекта произведения Title должны удаляться все отзывы к этому произведению и комментарии к ним.
-# При удалении объекта отзыва Review должны быть удалены все комментарии к этому отзыву.
-# При удалении объекта категории Category не нужно **удалять связанные с этой категорией произведения.
-# При удалении объекта жанра Genre не нужно удалять связанные с этим жанром произведения.
+        return self.text[:settings.CHAR_IN_COMMENT]
