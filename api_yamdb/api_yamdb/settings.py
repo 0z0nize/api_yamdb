@@ -1,14 +1,15 @@
 import os
 from datetime import timedelta
 from pathlib import Path
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-CSV_DATA_DIR = os.path.join(BASE_DIR, "static", "data")
+CSV_DATA_DIR = os.path.join(BASE_DIR, 'static', 'data')
 
-load_dotenv()
-SECRET_KEY = os.getenv('TOKEN')
+# load_dotenv()
+# SECRET_KEY = os.getenv('TOKEN')
+TOKEN = 'p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs'
 
 DEBUG = True
 

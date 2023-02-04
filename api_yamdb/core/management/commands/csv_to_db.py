@@ -7,8 +7,8 @@ from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
 
 FILE_TO_MODELS = [
-    ('catagory.csv', Category),
-    ('comment.csv', Comment),
+    ('category.csv', Category),
+    ('comments.csv', Comment),
     ('genre.csv', Genre),
     ('genre_title.csv', Title.genre.through),
     ('review.csv', Review),
@@ -18,6 +18,16 @@ FILE_TO_MODELS = [
 
 
 class Command(BaseCommand):
+
+    # def handle(self, *args, **kwargs):
+
+    #     for csv_file, model in FILE_TO_MODELS:
+    #         location = os.path.join(settings.CSV_DATA_DIR, csv_file)
+    #         fff = pathlib.PurePath(location)
+    #         open(location)
+    #         self.stdout.write(
+    #             f'Модель: {model}; Путь: {location}'
+    #         )
 
     def handle(self, *args, **options):
 
