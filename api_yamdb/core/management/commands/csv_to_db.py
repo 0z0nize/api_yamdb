@@ -51,7 +51,7 @@ class Command(BaseCommand):
 
 
 def import_csv_data(csv_file, model):
-    with open(csv_file, 'r') as csv_model_data:
+    with open(csv_file, encoding='utf-8') as csv_model_data:
         csv_reader = csv.reader(csv_model_data, delimiter=',')
         fields = next(csv_reader)
         for count, field in enumerate(fields):
