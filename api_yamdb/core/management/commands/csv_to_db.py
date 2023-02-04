@@ -8,10 +8,10 @@ from users.models import User
 
 FILE_TO_MODELS = [
     ('category.csv', Category),
-    ('comments.csv', Comment),
+    #('comments.csv', Comment),
     ('genre.csv', Genre),
-    ('genre_title.csv', Title.genre.through),
-    ('review.csv', Review),
+    #('genre_title.csv', Title.genre.through),
+    #('review.csv', Review),
     ('titles.csv', Title),
     ('users.csv', User),
 ]
