@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
         if options['clear']:
             for csv_file, model in FILE_TO_MODELS:
-                model.objects.all.delete()
+                model.objects.all().delete()
 
         for csv_file, model in FILE_TO_MODELS:
             import_csv_data(
