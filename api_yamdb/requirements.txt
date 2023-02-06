@@ -23,8 +23,6 @@ itypes==1.2.0
 Jinja2==3.1.2
 MarkupSafe==2.1.2
 mccabe==0.7.0
-mypy==0.991
-mypy-extensions==0.4.3
 oauthlib==3.2.2
 packaging==23.0
 pluggy==0.13.1
@@ -46,7 +44,5 @@ social-auth-app-django==4.0.0
 social-auth-core==4.3.0
 sqlparse==0.4.3
 toml==0.10.2
-tomli==2.0.1
-typing_extensions==4.4.0
 uritemplate==4.1.1
 urllib3==1.26.14
