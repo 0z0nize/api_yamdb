@@ -13,7 +13,7 @@ Django==3.2
 django-filter==22.1
 django-templated-mail==1.1.1
 djangorestframework==3.12.4
-djangorestframework-simplejwt==5.2.2
+djangorestframework-simplejwt
 djoser==2.1.0
 flake8==6.0.0
 idna==3.4
