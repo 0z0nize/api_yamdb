@@ -12,7 +12,7 @@ defusedxml==0.7.1
 Django==3.2
 django-filter==22.1
 django-templated-mail==1.1.1
-djangorestframework==3.12.4
+djangorestframework
 djangorestframework-simplejwt
 djoser==2.1.0
 flake8==6.0.0
