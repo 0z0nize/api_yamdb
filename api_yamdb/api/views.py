@@ -26,21 +26,25 @@ from api.serializers import (CategorySerializer, CommentSerializer,
 @api_view(['POST'])
 def register(request):
     serializer = RegisterDataSerializer(data=request.data)
-    existing_user = User.objects.filter(
+    user_in_base = User.objects.filter(
         username=request.data.get('username'),
         email=request.data.get('email')
     )
-    if existing_user.exists():
+    if user_in_base.exists():
+        user_in_base = User.objects.get(
+            username=request.data.get('username'),
+            email=request.data.get('email')
+        )
+        confirmation_mail(user_in_base)
         return Response(request.data, status=status.HTTP_200_OK)
+    serializer.is_valid(raise_exception=True)
     try:
-        serializer.is_valid(raise_exception=True)
-        new_user, create = User.objects.get_or_create(
+        user, create = User.objects.get_or_create(
             **serializer.validated_data
         )
     except IntegrityError:
         raise ValidationError('Неверное имя пользователя или email')
-    confirmation_mail(new_user)
-
+    confirmation_mail(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
