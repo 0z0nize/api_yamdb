@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
     'core.apps.CoreConfig',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
