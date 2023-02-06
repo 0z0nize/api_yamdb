@@ -26,19 +26,18 @@ from api.serializers import (CategorySerializer, CommentSerializer,
 @api_view(['POST'])
 def register(request):
     serializer = RegisterDataSerializer(data=request.data)
-    user_in_base = User.objects.filter(
+    if User.objects.filter(
         username=request.data.get('username'),
         email=request.data.get('email')
-    )
-    if user_in_base.exists():
+    ).exists():
         user_in_base = User.objects.get(
             username=request.data.get('username'),
             email=request.data.get('email')
         )
         confirmation_mail(user_in_base)
         return Response(request.data, status=status.HTTP_200_OK)
-    serializer.is_valid(raise_exception=True)
     try:
+        serializer.is_valid(raise_exception=True)
         user, create = User.objects.get_or_create(
             **serializer.validated_data
         )
