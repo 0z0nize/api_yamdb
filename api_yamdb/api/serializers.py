@@ -28,7 +28,7 @@ class UserEditSerializer(UserSerializer):
 
 
 class RegisterDataSerializer(
-    serializers.HyperlinkedModelSerializer, UsernameValidatorMixin
+    serializers.ModelSerializer, UsernameValidatorMixin
 ):
     email = serializers.EmailField(
         max_length=DEFAULT_EMAIL_LENGTH,

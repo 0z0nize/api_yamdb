@@ -1,10 +1,9 @@
-from api_yamdb.settings import DEFAULT_FROM_EMAIL
 from core.filters import TitleFilter
 from core.permissions import (IsAdmin, IsAdminOrReadOnly,
                               UserAdminModeratorOrReadOnly)
 from core.viewsets import GetPostDeleteViewSet
+from core.utils import confirmation_mail
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
 from django.db.models import Avg
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
@@ -27,25 +26,20 @@ from api.serializers import (CategorySerializer, CommentSerializer,
 @api_view(['POST'])
 def register(request):
     serializer = RegisterDataSerializer(data=request.data)
-    if User.objects.filter(
+    existing_user = User.objects.filter(
         username=request.data.get('username'),
         email=request.data.get('email')
-    ).exists():
+    )
+    if existing_user.exists():
         return Response(request.data, status=status.HTTP_200_OK)
-    serializer.is_valid(raise_exception=True)
     try:
-        user, create = User.objects.get_or_create(
+        serializer.is_valid(raise_exception=True)
+        new_user, create = User.objects.get_or_create(
             **serializer.validated_data
         )
     except IntegrityError:
         raise ValidationError('Неверное имя пользователя или email')
-    confirmation_code = default_token_generator.make_token(user)
-    send_mail(
-        subject='YaMDb регистрация',
-        message=f'Ваш код подтверждения: {confirmation_code}',
-        from_email=DEFAULT_FROM_EMAIL,
-        recipient_list=[user.email],
-    )
+    confirmation_mail(new_user)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
