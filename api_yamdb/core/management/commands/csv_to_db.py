@@ -60,5 +60,14 @@ def import_csv_data(self, csv_file, model):
             }
             _, created = model.objects.get_or_create(**value)
             if not created:
-                sys.exit(Fore.RED + 'CSV to database record - ERORR!!!')
-            self.stdout.write(Fore.GREEN + f'Recorded: {created}\n{value}\n\n')
+                sys.exit(
+                    Fore.LIGHTYELLOW_EX + '\nCSV to database record - ERORR!!!'
+                    + Fore.RED + '\n\nIncorrect data:'
+                    + Fore.BLUE + f'\n{value}\n\n'
+                    + Fore.LIGHTMAGENTA_EX
+                    + '!!!Clear database before recording.!!!\n'
+                )
+            self.stdout.write(
+                Fore.WHITE + 'Recorded: ' + Fore.GREEN + f'{created}'
+                + Fore.LIGHTBLACK_EX + f'\n{value}\n\n'
+            )
