@@ -1,8 +1,13 @@
+from api.serializers import (CategorySerializer, CommentSerializer,
+                             GenreSerializer, RegisterDataSerializer,
+                             ReviewSerializer, TitleSerializerGet,
+                             TitleSerializerPost, TokenSerializer,
+                             UserEditSerializer, UserSerializer)
 from core.filters import TitleFilter
 from core.permissions import (IsAdmin, IsAdminOrReadOnly,
                               UserAdminModeratorOrReadOnly)
-from core.viewsets import GetPostDeleteViewSet
 from core.utils import confirmation_mail
+from core.viewsets import GetPostDeleteViewSet
 from django.contrib.auth.tokens import default_token_generator
 from django.db.models import Avg
 from django.db.utils import IntegrityError
@@ -15,12 +20,6 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Genre, Review, Title
 from users.models import User
-
-from api.serializers import (CategorySerializer, CommentSerializer,
-                             GenreSerializer, RegisterDataSerializer,
-                             ReviewSerializer, TitleSerializerGet,
-                             TitleSerializerPost, TokenSerializer,
-                             UserEditSerializer, UserSerializer)
 
 
 @api_view(['POST'])

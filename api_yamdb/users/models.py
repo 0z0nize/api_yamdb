@@ -13,7 +13,8 @@ class User(AbstractUser, UsernameValidatorMixin):
         (MODERATOR, 'Moderator'),
         (USER, 'User'),
     )
-
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
     email = models.EmailField(
         verbose_name='Адрес электронной почты',
         unique=True,
@@ -42,10 +43,6 @@ class User(AbstractUser, UsernameValidatorMixin):
     @property
     def is_user(self):
         return self.role == self.USER
-
-    USERNAME_FIELD = 'email'
-
-    REQUIRED_FIELDS = ['username']
 
     class Meta:
         ordering = ('id', )
