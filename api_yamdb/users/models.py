@@ -13,11 +13,8 @@ class User(AbstractUser, UsernameValidatorMixin):
         (MODERATOR, 'Moderator'),
         (USER, 'User'),
     )
-
     USERNAME_FIELD = 'email'
-
     REQUIRED_FIELDS = ['username']
-
     email = models.EmailField(
         verbose_name='Адрес электронной почты',
         unique=True,

@@ -23,8 +23,6 @@ itypes
 Jinja2
 MarkupSafe
 mccabe
-mypy
-mypy-extensions
 oauthlib
 packaging
 pluggy
@@ -46,7 +44,5 @@ social-auth-app-django
 social-auth-core
 sqlparse
 toml
-tomli
-typing_extensions
 uritemplate
 urllib3
