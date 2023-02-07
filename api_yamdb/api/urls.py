@@ -7,7 +7,7 @@ from .views import (CategoryViewSet, CommentViewSet, GenreViewSet,
 
 v1_router = NoPutRouter()
 
-v1_router.register(r'users', UserViewSet)
+v1_router.register('users', UserViewSet)
 v1_router.register(
     r'titles/(?P<title_id>\d+)/reviews', ReviewViewSet, basename='reviews')
 v1_router.register(

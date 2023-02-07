@@ -21,6 +21,7 @@ class Genre(NameSlugModel):
 class Title(models.Model):
     name = models.CharField(max_length=settings.CHAR_IN_NAME)
     year = models.IntegerField(
+        db_index=True,
         validators=[validate_release_year]
     )
     description = models.TextField(
