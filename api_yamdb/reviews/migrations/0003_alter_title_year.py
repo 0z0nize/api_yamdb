@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('reviews', '0002_initial'),
     ]
@@ -14,6 +13,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='title',
             name='year',
-            field=models.IntegerField(db_index=True, validators=[core.validators.validate_release_year]),
+            field=models.IntegerField(
+                db_index=True,
+                validators=[core.validators.validate_release_year],
+            ),
         ),
     ]

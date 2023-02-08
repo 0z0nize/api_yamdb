@@ -1,9 +1,11 @@
 asgiref
 atomicwrites
 attrs
+black
 certifi
 cffi
 charset-normalizer
+click
 colorama
 coreapi
 coreschema
@@ -23,8 +25,11 @@ itypes
 Jinja2
 MarkupSafe
 mccabe
+mypy-extensions
 oauthlib
 packaging
+pathspec
+platformdirs
 pluggy
 py
 pycodestyle
@@ -44,5 +49,7 @@ social-auth-app-django
 social-auth-core
 sqlparse
 toml
+tomli
+typing_extensions
 uritemplate
 urllib3

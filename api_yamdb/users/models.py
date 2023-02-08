@@ -1,7 +1,8 @@
-from core.validators import UsernameValidatorMixin
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from core.validators import UsernameValidatorMixin
 
 
 class User(AbstractUser, UsernameValidatorMixin):
@@ -18,19 +19,15 @@ class User(AbstractUser, UsernameValidatorMixin):
     email = models.EmailField(
         verbose_name='Адрес электронной почты',
         unique=True,
-        max_length=settings.DEFAULT_EMAIL_LENGTH
+        max_length=settings.DEFAULT_EMAIL_LENGTH,
     )
     role = models.CharField(
         verbose_name='Роль',
         max_length=settings.DEFAULT_FIELD_LENGTH,
         choices=ROLES,
-        default=USER
+        default=USER,
     )
-    bio = models.TextField(
-        verbose_name='О себе',
-        null=True,
-        blank=True
-    )
+    bio = models.TextField(verbose_name='О себе', null=True, blank=True)
 
     @property
     def is_moderator(self):
@@ -45,7 +42,7 @@ class User(AbstractUser, UsernameValidatorMixin):
         return self.role == self.USER
 
     class Meta:
-        ordering = ('id', )
+        ordering = ('id',)
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 

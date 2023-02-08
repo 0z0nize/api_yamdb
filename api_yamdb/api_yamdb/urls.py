@@ -8,6 +8,6 @@ urlpatterns = [
     path(
         'redoc/',
         TemplateView.as_view(template_name='redoc.html'),
-        name='redoc'
+        name='redoc',
     ),
 ]

@@ -7,17 +7,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('name', models.CharField(max_length=256)),
                 ('slug', models.SlugField(unique=True)),
             ],
@@ -31,7 +37,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Comment',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('pub_date', models.DateTimeField(auto_now_add=True)),
                 ('text', models.TextField(verbose_name='Текст')),
             ],
@@ -46,7 +60,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Genre',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('name', models.CharField(max_length=256)),
                 ('slug', models.SlugField(unique=True)),
             ],
@@ -58,10 +80,30 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Review',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('pub_date', models.DateTimeField(auto_now_add=True)),
                 ('text', models.TextField(verbose_name='Текст')),
-                ('score', models.PositiveSmallIntegerField(default=1, error_messages={'validators': 'Оценки могут быть от 1 до 10'}, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(10)])),
+                (
+                    'score',
+                    models.PositiveSmallIntegerField(
+                        default=1,
+                        error_messages={
+                            'validators': 'Оценки могут быть от 1 до 10'
+                        },
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(10),
+                        ],
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Ревью',
@@ -74,12 +116,39 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Title',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('name', models.CharField(max_length=256)),
-                ('year', models.IntegerField(validators=[core.validators.validate_release_year])),
+                (
+                    'year',
+                    models.IntegerField(
+                        validators=[core.validators.validate_release_year]
+                    ),
+                ),
                 ('description', models.TextField(blank=True, null=True)),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='titles', to='reviews.category')),
-                ('genre', models.ManyToManyField(related_name='titles', to='reviews.Genre')),
+                (
+                    'category',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name='titles',
+                        to='reviews.category',
+                    ),
+                ),
+                (
+                    'genre',
+                    models.ManyToManyField(
+                        related_name='titles', to='reviews.Genre'
+                    ),
+                ),
             ],
         ),
     ]
