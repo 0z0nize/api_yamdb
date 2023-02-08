@@ -1,13 +1,3 @@
-from api.serializers import (CategorySerializer, CommentSerializer,
-                             GenreSerializer, RegisterDataSerializer,
-                             ReviewSerializer, TitleSerializerGet,
-                             TitleSerializerPost, TokenSerializer,
-                             UserEditSerializer, UserSerializer)
-from core.filters import TitleFilter
-from core.permissions import (IsAdmin, IsAdminOrReadOnly,
-                              UserAdminModeratorOrReadOnly)
-from core.utils import confirmation_mail
-from core.viewsets import GetPostDeleteViewSet
 from django.contrib.auth.tokens import default_token_generator
 from django.db.models import Avg
 from django.db.utils import IntegrityError
@@ -18,6 +8,27 @@ from rest_framework.decorators import action, api_view
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
+
+from api.serializers import (
+    CategorySerializer,
+    CommentSerializer,
+    GenreSerializer,
+    RegisterDataSerializer,
+    ReviewSerializer,
+    TitleSerializerGet,
+    TitleSerializerPost,
+    TokenSerializer,
+    UserEditSerializer,
+    UserSerializer,
+)
+from core.filters import TitleFilter
+from core.permissions import (
+    IsAdmin,
+    IsAdminOrReadOnly,
+    UserAdminModeratorOrReadOnly,
+)
+from core.utils import confirmation_mail
+from core.viewsets import GetPostDeleteViewSet
 from reviews.models import Category, Genre, Review, Title
 from users.models import User
 
@@ -26,20 +37,17 @@ from users.models import User
 def register(request):
     serializer = RegisterDataSerializer(data=request.data)
     if User.objects.filter(
-        username=request.data.get('username'),
-        email=request.data.get('email')
+        username=request.data.get('username'), email=request.data.get('email')
     ).exists():
         user_in_base = User.objects.get(
             username=request.data.get('username'),
-            email=request.data.get('email')
+            email=request.data.get('email'),
         )
         confirmation_mail(user_in_base)
         return Response(request.data, status=status.HTTP_200_OK)
     try:
         serializer.is_valid(raise_exception=True)
-        user, create = User.objects.get_or_create(
-            **serializer.validated_data
-        )
+        user, create = User.objects.get_or_create(**serializer.validated_data)
     except IntegrityError:
         raise ValidationError('Неверное имя пользователя или email')
     confirmation_mail(user)
@@ -51,8 +59,7 @@ def get_jwt_token(request):
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = get_object_or_404(
-        User,
-        username=serializer.validated_data.get('username')
+        User, username=serializer.validated_data.get('username')
     )
 
     if default_token_generator.check_token(
@@ -80,9 +87,7 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     def me(self, request):
         serializer = self.get_serializer(
-            request.user,
-            data=request.data,
-            partial=True
+            request.user, data=request.data, partial=True
         )
         serializer.is_valid(raise_exception=True)
         if request.method == 'PATCH':
@@ -129,8 +134,9 @@ class GenreViewSet(GetPostDeleteViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(rating=Avg('review__score')
-                                      ).order_by('id')
+    queryset = Title.objects.annotate(rating=Avg('review__score')).order_by(
+        'id'
+    )
     serializer_class = TitleSerializerGet
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)

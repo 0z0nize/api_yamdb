@@ -1,13 +1,16 @@
-from core.validators import (SCORE_VALIDATOR, UsernameValidatorMixin,
-                             validate_release_year)
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueValidator
-from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import User
 
 from api_yamdb.settings import DEFAULT_EMAIL_LENGTH, DEFAULT_FIELD_LENGTH
+from core.validators import (
+    SCORE_VALIDATOR,
+    UsernameValidatorMixin,
+    validate_release_year,
+)
+from reviews.models import Category, Comment, Genre, Review, Title
+from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer, UsernameValidatorMixin):
@@ -18,8 +21,14 @@ class UserSerializer(serializers.ModelSerializer, UsernameValidatorMixin):
     )
 
     class Meta:
-        fields = ('username', 'email', 'first_name',
-                  'last_name', 'bio', 'role')
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role',
+        )
         model = User
 
 
@@ -42,26 +51,23 @@ class RegisterDataSerializer(
 
 
 class TokenSerializer(serializers.Serializer, UsernameValidatorMixin):
-    username = serializers.CharField(required=True,)
+    username = serializers.CharField(
+        required=True,
+    )
     confirmation_code = serializers.CharField(
-        max_length=DEFAULT_FIELD_LENGTH, required=True,
+        max_length=DEFAULT_FIELD_LENGTH,
+        required=True,
     )
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    title = SlugRelatedField(
-        slug_field='name',
-        read_only=True
-    )
+    title = SlugRelatedField(slug_field='name', read_only=True)
     author = SlugRelatedField(
         slug_field='username',
         read_only=True,
-        default=serializers.CurrentUserDefault()
+        default=serializers.CurrentUserDefault(),
     )
-    title = SlugRelatedField(
-        slug_field='name',
-        read_only=True
-    )
+    title = SlugRelatedField(slug_field='name', read_only=True)
     score = serializers.IntegerField(validators=SCORE_VALIDATOR)
 
     class Meta:
@@ -85,7 +91,7 @@ class CommentSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(
         read_only=True,
         slug_field='username',
-        default=serializers.CurrentUserDefault()
+        default=serializers.CurrentUserDefault(),
     )
 
     class Meta:
@@ -119,13 +125,10 @@ class TitleSerializerGet(serializers.ModelSerializer):
 
 class TitleSerializerPost(serializers.ModelSerializer):
     category = SlugRelatedField(
-        slug_field='slug',
-        queryset=Category.objects.all()
+        slug_field='slug', queryset=Category.objects.all()
     )
     genre = SlugRelatedField(
-        slug_field='slug',
-        queryset=Genre.objects.all(),
-        many=True
+        slug_field='slug', queryset=Genre.objects.all(), many=True
     )
     year = serializers.IntegerField()
 

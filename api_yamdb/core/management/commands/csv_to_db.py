@@ -5,6 +5,7 @@ import sys
 from colorama import Fore
 from django.conf import settings
 from django.core.management.base import BaseCommand
+
 from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import User
 
@@ -23,16 +24,13 @@ class Command(BaseCommand):
     help = 'Upload data from csv file to sql database'
 
     def handle(self, **options):
-
         if options['clear']:
             for csv_file, model in FILE_TO_MODELS:
                 model.objects.all().delete()
 
         for csv_file, model in FILE_TO_MODELS:
             import_csv_data(
-                self,
-                os.path.join(settings.CSV_DATA_DIR, csv_file),
-                model
+                self, os.path.join(settings.CSV_DATA_DIR, csv_file), model
             )
 
     def add_arguments(self, parser):
@@ -41,7 +39,7 @@ class Command(BaseCommand):
             '--clear',
             action='store_true',
             default=False,
-            help='Clear before import'
+            help='Clear before import',
         )
 
 
@@ -50,24 +48,30 @@ def import_csv_data(self, csv_file, model):
         csv_reader = csv.reader(csv_model_data, delimiter=',')
         fields = next(csv_reader)
         for count, field in enumerate(fields):
-            if (model._meta.get_field(field).is_relation and not
-                    field.endswith('_id')):
+            if model._meta.get_field(field).is_relation and not field.endswith(
+                '_id'
+            ):
                 fields[count] += "_id"
 
         for row in csv_reader:
-            value = {
-                field: row[count] for count, field in enumerate(fields)
-            }
+            value = {field: row[count] for count, field in enumerate(fields)}
             _, created = model.objects.get_or_create(**value)
             if not created:
                 sys.exit(
-                    Fore.LIGHTYELLOW_EX + '\nCSV to database record - ERORR!!!'
-                    + Fore.RED + '\n\nIncorrect data:'
-                    + Fore.BLUE + f'\n{value}\n\n'
+                    Fore.LIGHTYELLOW_EX
+                    + '\nCSV to database record - ERORR!!!'
+                    + Fore.RED
+                    + '\n\nIncorrect data:'
+                    + Fore.BLUE
+                    + f'\n{value}\n\n'
                     + Fore.LIGHTMAGENTA_EX
                     + '!!!Clear database before recording.!!!\n'
                 )
             self.stdout.write(
-                Fore.WHITE + 'Recorded: ' + Fore.GREEN + f'{created}'
-                + Fore.LIGHTBLACK_EX + f'\n{value}\n\n'
+                Fore.WHITE
+                + 'Recorded: '
+                + Fore.GREEN
+                + f'{created}'
+                + Fore.LIGHTBLACK_EX
+                + f'\n{value}\n\n'
             )
